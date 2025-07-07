@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TeacherMapper">
+    
+    <resultMap type="Teacher" id="TeacherResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="post"    column="post"    />
+        <result property="contact1"    column="contact1"    />
+        <result property="contact2"    column="contact2"    />
+        <result property="contact3"    column="contact3"    />
+    </resultMap>
+
+    <sql id="selectTeacherVo">
+        select id, name, post, contact1, contact2, contact3 from db_teacher
+    </sql>
+
+    <select id="selectTeacherList" parameterType="Teacher" resultMap="TeacherResult">
+        <include refid="selectTeacherVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="post != null  and post != ''"> and post = #{post}</if>
+            <if test="contact1 != null  and contact1 != ''"> and contact1 = #{contact1}</if>
+            <if test="contact2 != null  and contact2 != ''"> and contact2 = #{contact2}</if>
+            <if test="contact3 != null  and contact3 != ''"> and contact3 = #{contact3}</if>
+        </where>
+    </select>
+    
+    <select id="selectTeacherById" parameterType="Long" resultMap="TeacherResult">
+        <include refid="selectTeacherVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTeacher" parameterType="Teacher" useGeneratedKeys="true" keyProperty="id">
+        insert into db_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="post != null">post,</if>
+            <if test="contact1 != null">contact1,</if>
+            <if test="contact2 != null">contact2,</if>
+            <if test="contact3 != null">contact3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="post != null">#{post},</if>
+            <if test="contact1 != null">#{contact1},</if>
+            <if test="contact2 != null">#{contact2},</if>
+            <if test="contact3 != null">#{contact3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTeacher" parameterType="Teacher">
+        update db_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="post != null">post = #{post},</if>
+            <if test="contact1 != null">contact1 = #{contact1},</if>
+            <if test="contact2 != null">contact2 = #{contact2},</if>
+            <if test="contact3 != null">contact3 = #{contact3},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTeacherById" parameterType="Long">
+        delete from db_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteTeacherByIds" parameterType="String">
+        delete from db_teacher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
