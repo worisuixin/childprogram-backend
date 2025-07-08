@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CourseMapper">
+    
+    <resultMap type="Course" id="CourseResult">
+        <result property="id"    column="id"    />
+        <result property="teacher"    column="teacher"    />
+        <result property="title"    column="title"    />
+        <result property="about"    column="about"    />
+        <result property="description"    column="description"    />
+        <result property="lessone"    column="lessone"    />
+        <result property="price"    column="price"    />
+        <result property="duration"    column="duration"    />
+        <result property="maxStudents"    column="max_students"    />
+    </resultMap>
+
+    <sql id="selectCourseVo">
+        select id, teacher, title, about, description, lessone, price, duration, max_students from db_course
+    </sql>
+
+    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">
+        <include refid="selectCourseVo"/>
+        <where>  
+            <if test="teacher != null  and teacher != ''"> and teacher = #{teacher}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="about != null  and about != ''"> and about = #{about}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="lessone != null "> and lessone = #{lessone}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="maxStudents != null "> and max_students = #{maxStudents}</if>
+        </where>
+    </select>
+    
+    <select id="selectCourseById" parameterType="Integer" resultMap="CourseResult">
+        <include refid="selectCourseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
+        insert into db_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teacher != null">teacher,</if>
+            <if test="title != null">title,</if>
+            <if test="about != null">about,</if>
+            <if test="description != null">description,</if>
+            <if test="lessone != null">lessone,</if>
+            <if test="price != null">price,</if>
+            <if test="duration != null">duration,</if>
+            <if test="maxStudents != null">max_students,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teacher != null">#{teacher},</if>
+            <if test="title != null">#{title},</if>
+            <if test="about != null">#{about},</if>
+            <if test="description != null">#{description},</if>
+            <if test="lessone != null">#{lessone},</if>
+            <if test="price != null">#{price},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="maxStudents != null">#{maxStudents},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCourse" parameterType="Course">
+        update db_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teacher != null">teacher = #{teacher},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="about != null">about = #{about},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="lessone != null">lessone = #{lessone},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="maxStudents != null">max_students = #{maxStudents},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourseById" parameterType="Integer">
+        delete from db_course where id = #{id}
+    </delete>
+
+    <delete id="deleteCourseByIds" parameterType="String">
+        delete from db_course where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

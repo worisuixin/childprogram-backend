@@ -51,7 +51,7 @@
         <!-- 代码生成-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-generator</artifactId>
+            <artifactId>ruoyi-core</artifactId>
         </dependency>
 
     </dependencies>
